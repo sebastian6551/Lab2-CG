@@ -1,3 +1,9 @@
+.app {
+  text-align: center;
+  margin: 0px auto;
+  width: 90vw;
+}
+
 .title {
   font-family: 'Jost', sans-serif;
   font-style: normal;
@@ -18,9 +24,9 @@
   background: #e8eef5;
   border: 1px solid #e8eef5;
   border-radius: 30px;
+  padding: 1.25em;
 
   font-family: 'Jost', sans-serif;
-  padding: 20px;
   font-style: normal;
   font-size: 0.9375em;
   color: #111111;
@@ -30,8 +36,31 @@
   color: #111111;
 }
 
-.space10px {
-  padding: 10px;
+.sizeField {
+  box-sizing: border-box;
+  width: 10.5vw;
+  height: 5.58711567vw;
+  min-width: 50px;
+  min-height: 20px;
+  max-width: 263.7px;
+  max-height: 44.1px;
+  background: #e8eef5;
+  border: 1px solid #e8eef5;
+  border-radius: 30px;
+
+  font-family: 'Jost', sans-serif;
+  padding: 1.25em;
+  font-style: normal;
+  font-size: 0.9375em;
+  color: #111111;
+}
+
+.sizeField::placeholder {
+  color: #111111;
+}
+
+.space9px {
+  padding: 9px;
 }
 
 .spaceRight {
@@ -76,8 +105,8 @@
   border: 1px solid #e8eef5;
   border-radius: 30px;
   cursor: pointer;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 1.25em;
+  padding-right: 1.25em;
 
   font-family: 'Jost', sans-serif;
   font-style: normal;
@@ -88,6 +117,5 @@
 .scatter {
   text-align: center;
   margin: 0px auto;
-  width: 70vw;
+  height: 70vh;
 }
-

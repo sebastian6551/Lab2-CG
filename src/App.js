@@ -11,6 +11,7 @@ function App() {
   const initialPoint = useRef('');
   const finalPoint = useRef('');
   const selectedAlgorithm = useRef('');
+  const gridSize = useRef('');
 
   const [state, setState] = useState({
     datasets: [
@@ -25,6 +26,44 @@ function App() {
     ],
   });
 
+  const [options, setOptions] = useState(
+    //Chart options, initial grid size
+    changeOptions(10, 10)
+  );
+
+  function changeOptions(sizeX, sizeY){
+    return ({
+      //Chart options
+      responsive: true,
+      aspectRatio: 2,
+      resizeDelay: 0,
+      maintainAspectRatio: false,
+  
+      plugins: {
+        title: {
+          display: false,
+        },
+  
+        legend: {
+          display: false,
+        },
+      },
+  
+      scales: {
+        x: {
+          min: -sizeX,
+          max: sizeX,
+          position: 'center',
+        },
+        y: {
+          min: -sizeY,
+          max: sizeY,
+          position: 'center',
+        },
+      },
+    })
+  };
+  
   const [placeHolder, setPlaceHolder] = useState('Punto final (x,y)');
 
   // Transforms the point in list format [x, y] to the chart accepted format
@@ -44,6 +83,15 @@ function App() {
   //Sets the new preferences by pressing the setPreferences button
   const setPreferences = async (event) => {
     event.preventDefault();
+
+    if (gridSize.current.value.length > 0) {
+      var x = gridSize.current.value.split(',')[0].replace('(', '');
+      x = parseFloat(x);
+      var y = gridSize.current.value.split(',')[1].replace(')', '');
+      y = parseFloat(y);
+      setOptions(changeOptions(x, y));
+    }
+
     if (initialPoint.current.value.length > 0 && finalPoint.current.value.length > 0) {
       var points = [];
       var x0 = initialPoint.current.value.split(',')[0].replace('(', '');
@@ -55,7 +103,6 @@ function App() {
         var radius = finalPoint.current.value;
         radius = parseFloat(radius);
         points = transforms(midpointAlgorithm([x0, y0], radius));
-        console.log(midpointAlgorithm([x0, y0], radius));
       } else {
         var xf = finalPoint.current.value.split(',')[0].replace('(', '');
         xf = parseFloat(xf);
@@ -84,49 +131,25 @@ function App() {
 
   //Changes the finalPoint text field place holder when the selected option changes
   const changePlaceHolder = async (event) => {
+    var currentValue = finalPoint.current.value;
     event.preventDefault();
     if (selectedAlgorithm.current.value === 'midpoint') {
       setPlaceHolder('Radio');
       finalPoint.current.value = '';
     } else {
-      setPlaceHolder('Punto final (x,y)');
-      finalPoint.current.value = '';
+      if (!isNaN(currentValue)){
+        setPlaceHolder('Punto final (x,y)');
+        finalPoint.current.value = "";
+      } else {
+        finalPoint.current.value = currentValue
+      }
     }
   };
 
-  //Chart options
-  const options = {
-    responsive: true,
-    aspectRatio: 2,
-
-    plugins: {
-      title: {
-        display: false,
-      },
-
-      legend: {
-        display: false,
-      },
-    },
-
-    scales: {
-      x: {
-        min: -10,
-        max: 10,
-        position: 'center',
-      },
-      y: {
-        min: -10,
-        max: 10,
-        position: 'center',
-      },
-    },
-  };
-
   return (
-    <div className="scatter">
+    <div className="app">
       <h1 className="title">Lab 2 CG</h1>
-      <div className="space10px"></div>
+      <div className="space9px"></div>
       <select
         className="select"
         title="Agoritmo"
@@ -140,6 +163,7 @@ function App() {
           Algoritmo básico para dibujar lineas
         </option>
         <option value="midpoint">Algoritmo Midpoint para circunferencia</option>
+        <option value="algorithm">Algoritmo</option>
       </select>
       <span className="spaceRight"></span>
       <input
@@ -159,14 +183,24 @@ function App() {
       />
       <span className="spaceRight"></span>
       <input
+        className="sizeField"
+        title="Tamaño"
+        type="text"
+        ref={gridSize}
+        placeholder="Tamaño (x, y)"
+      />
+      <span className="spaceRight"></span>
+      <input
         title="Establecer preferencias"
         className="button"
         type="button"
         value="Establecer preferencias"
         onClick={setPreferences}
       />
-      <div className="space10px"></div>
+      <div className="space9px"></div>
+      <div className="scatter">
       <Scatter options={options} data={state} />
+      </div>
     </div>
   );
 }
