@@ -1,6 +1,7 @@
 import './App.css';
 import basicLineDrawingAlgorithm from './algorithms/basicLineDrawingAlgorithm.js';
 import midpointAlgorithm from './algorithms/midpointAlgorithm.js';
+import DDAAlgorithm from './algorithms/DDAAlgorithm.js';
 import { useRef, useState } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Scatter } from 'react-chartjs-2';
@@ -12,7 +13,8 @@ function App() {
   const finalPoint = useRef('');
   const selectedAlgorithm = useRef('');
   const gridSize = useRef('');
-
+  const [placeHolder, setPlaceHolder] = useState('Punto final (x,y)');
+  
   const [state, setState] = useState({
     datasets: [
       {
@@ -33,7 +35,6 @@ function App() {
 
   function changeOptions(sizeX, sizeY){
     return ({
-      //Chart options
       responsive: true,
       aspectRatio: 2,
       resizeDelay: 0,
@@ -63,8 +64,6 @@ function App() {
       },
     })
   };
-  
-  const [placeHolder, setPlaceHolder] = useState('Punto final (x,y)');
 
   // Transforms the point in list format [x, y] to the chart accepted format
   function transforms(list) {
@@ -109,9 +108,15 @@ function App() {
         var yf = finalPoint.current.value.split(',')[1].replace(')', '');
         yf = parseFloat(yf);
 
-        if (selectedAlgorithm.current.value === 'basicLineDrawing') {
-          points = transforms(basicLineDrawingAlgorithm([x0, y0], [xf, yf]));
-        }
+        switch (selectedAlgorithm.current.value){
+          case 'basicLineDrawing':
+            points = transforms(basicLineDrawingAlgorithm([x0, y0], [xf, yf]));
+            break;
+          case 'DDA':
+            points = transforms(DDAAlgorithm([x0, y0], [xf, yf]));
+            break;          
+          default:
+        };
       }
 
       setState({
@@ -156,14 +161,11 @@ function App() {
         ref={selectedAlgorithm}
         onChange={changePlaceHolder}
       >
-        <option hidden selected value="noAlgorithmSelected">
-          Algoritmo
-        </option>
-        <option value="basicLineDrawing">
-          Algoritmo básico para dibujar lineas
-        </option>
+        <option hidden selected value="noAlgorithmSelected">Algoritmo</option>
+        <option value="basicLineDrawing">Algoritmo básico para dibujar líneas</option>
+        <option value="DDA">Algoritmo DDA para líneas</option>
         <option value="midpoint">Algoritmo Midpoint para circunferencia</option>
-        <option value="algorithm">Algoritmo</option>
+        
       </select>
       <span className="spaceRight"></span>
       <input
@@ -187,7 +189,7 @@ function App() {
         title="Tamaño"
         type="text"
         ref={gridSize}
-        placeholder="Tamaño (x, y)"
+        placeholder="Tamaño (x,y)"
       />
       <span className="spaceRight"></span>
       <input
