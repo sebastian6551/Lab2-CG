@@ -18,7 +18,6 @@ function DDAAlgorithm(initialPoint, finalPoint) {
     yi += yinc;
     points.push([Math.round(xi), Math.round(yi)]);
   }
-
   return points;
 }
 

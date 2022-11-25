@@ -16,7 +16,6 @@ function basicLineDrawingAlgorithm(initialPoint, finalPoint) {
     xi++;
     points.push([xi, Math.round(yi)]);
   }
-
   return points;
 }
 

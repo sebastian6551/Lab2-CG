@@ -2,6 +2,7 @@ import './App.css';
 import basicLineDrawingAlgorithm from './algorithms/basicLineDrawingAlgorithm.js';
 import midpointAlgorithm from './algorithms/midpointAlgorithm.js';
 import DDAAlgorithm from './algorithms/DDAAlgorithm.js';
+import bresenhamsAlgorithm from './algorithms/bresenhamsAlgorithm.js';
 import { useRef, useState } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Scatter } from 'react-chartjs-2';
@@ -114,7 +115,10 @@ function App() {
             break;
           case 'DDA':
             points = transforms(DDAAlgorithm([x0, y0], [xf, yf]));
-            break;          
+            break;
+          case 'bresenhamsLine':
+            points = transforms(bresenhamsAlgorithm([x0, y0], [xf, yf]));
+            break;        
           default:
         };
       }
@@ -157,14 +161,16 @@ function App() {
       <div className="space9px"></div>
       <select
         className="select"
-        title="Agoritmo"
+        title="Algoritmo"
         ref={selectedAlgorithm}
         onChange={changePlaceHolder}
       >
-        <option hidden selected value="noAlgorithmSelected">Algoritmo</option>
-        <option value="basicLineDrawing">Algoritmo básico para dibujar líneas</option>
-        <option value="DDA">Algoritmo DDA para líneas</option>
-        <option value="midpoint">Algoritmo Midpoint para circunferencia</option>
+        <option hidden value="noAlgorithmSelected">Algoritmo</option>
+        <option value="basicLineDrawing">Algoritmo de dibujo de líneas básico</option>
+        <option value="DDA">Algoritmo de dibujo de líneas DDA</option>
+        <option value="bresenhamsLine">Algoritmo de dibujo de líneas de Bresenham</option>
+        <option value="midpoint">Algoritmo de dibujo de círculo de punto medio</option>
+        <option value="bresenhamsCircle">Algoritmo de dibujo de círculo de Bresenham</option>
         
       </select>
       <span className="spaceRight"></span>
