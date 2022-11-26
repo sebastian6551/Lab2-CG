@@ -3,6 +3,8 @@ import basicLineDrawingAlgorithm from './algorithms/basicLineDrawingAlgorithm.js
 import midpointAlgorithm from './algorithms/midpointAlgorithm.js';
 import DDAAlgorithm from './algorithms/DDAAlgorithm.js';
 import bresenhamsAlgorithm from './algorithms/bresenhamsAlgorithm.js';
+import bresenhamsCircleAlgorithm from './algorithms/bresenhamsCircleAlgorithm.js';
+import replicateOctant from './algorithms/auxiliaryFunctions/replicateOctant.js';
 import { useRef, useState } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Scatter } from 'react-chartjs-2';
@@ -14,7 +16,8 @@ function App() {
   const finalPoint = useRef('');
   const selectedAlgorithm = useRef('');
   const gridSize = useRef('');
-  const [placeHolder, setPlaceHolder] = useState('Punto final (x,y)');
+  const [initialPointCaption, setInitialPointCaption] = useState("Punto de inicio (x,y)");
+  const [finalPointCaption, setFinalPointCaption] = useState("Punto final (x,y)");
   
   const [state, setState] = useState({
     datasets: [
@@ -69,15 +72,28 @@ function App() {
   // Transforms the point in list format [x, y] to the chart accepted format
   function transforms(list) {
     var points = [];
-
+    
     for (var i = 0; i < list.length; i++) {
       points.push({
         x: list[i][0],
         y: list[i][1],
       });
     }
-
     return points;
+  }
+
+  function getRadius() {
+    var radius = finalPoint.current.value;
+    radius = parseFloat(radius);
+    return radius;
+  }
+
+  function getFinalPoint() {
+    var xf = finalPoint.current.value.split(',')[0].replace('(', '');
+    xf = parseFloat(xf);
+    var yf = finalPoint.current.value.split(',')[1].replace(')', '');
+    yf = parseFloat(yf);
+    return [xf,yf];
   }
 
   //Sets the new preferences by pressing the setPreferences button
@@ -99,29 +115,24 @@ function App() {
       var y0 = initialPoint.current.value.split(',')[1].replace(')', '');
       y0 = parseFloat(y0);
 
-      if (selectedAlgorithm.current.value === 'midpoint') {
-        var radius = finalPoint.current.value;
-        radius = parseFloat(radius);
-        points = transforms(midpointAlgorithm([x0, y0], radius));
-      } else {
-        var xf = finalPoint.current.value.split(',')[0].replace('(', '');
-        xf = parseFloat(xf);
-        var yf = finalPoint.current.value.split(',')[1].replace(')', '');
-        yf = parseFloat(yf);
-
-        switch (selectedAlgorithm.current.value){
-          case 'basicLineDrawing':
-            points = transforms(basicLineDrawingAlgorithm([x0, y0], [xf, yf]));
-            break;
-          case 'DDA':
-            points = transforms(DDAAlgorithm([x0, y0], [xf, yf]));
-            break;
-          case 'bresenhamsLine':
-            points = transforms(bresenhamsAlgorithm([x0, y0], [xf, yf]));
-            break;        
+      switch (selectedAlgorithm.current.value){
+        case 'midpoint':
+          points = transforms(replicateOctant(midpointAlgorithm([x0, y0], getRadius())));
+          break;
+        case 'bresenhamsCircle':
+          points = transforms(replicateOctant(bresenhamsCircleAlgorithm([x0, y0], getRadius())));
+          break;
+        case 'basicLineDrawing':
+          points = transforms(basicLineDrawingAlgorithm([x0, y0], getFinalPoint()));
+          break;
+        case 'DDA':
+          points = transforms(DDAAlgorithm([x0, y0], getFinalPoint()));
+          break;
+        case 'bresenhamsLine':
+          points = transforms(bresenhamsAlgorithm([x0, y0], getFinalPoint()));
+          break;        
           default:
-        };
-      }
+        }
 
       setState({
         datasets: [
@@ -140,18 +151,18 @@ function App() {
 
   //Changes the finalPoint text field place holder when the selected option changes
   const changePlaceHolder = async (event) => {
-    var currentValue = finalPoint.current.value;
     event.preventDefault();
-    if (selectedAlgorithm.current.value === 'midpoint') {
-      setPlaceHolder('Radio');
+    if (
+      selectedAlgorithm.current.value === 'midpoint' ||
+      selectedAlgorithm.current.value === 'bresenhamsCircle'
+    ) {
+      setInitialPointCaption('Centro (x,y)');
+      setFinalPointCaption('Radio');
+      initialPoint.current.value = '';
       finalPoint.current.value = '';
     } else {
-      if (!isNaN(currentValue)){
-        setPlaceHolder('Punto final (x,y)');
-        finalPoint.current.value = "";
-      } else {
-        finalPoint.current.value = currentValue
-      }
+      setInitialPointCaption('Punto de inicio (x,y)');
+      setFinalPointCaption('Punto final (x,y)');
     }
   };
 
@@ -171,23 +182,22 @@ function App() {
         <option value="bresenhamsLine">Algoritmo de dibujo de líneas de Bresenham</option>
         <option value="midpoint">Algoritmo de dibujo de círculo de punto medio</option>
         <option value="bresenhamsCircle">Algoritmo de dibujo de círculo de Bresenham</option>
-        
       </select>
       <span className="spaceRight"></span>
       <input
         className="textField"
-        title="Punto de inicio (x,y)"
+        title={initialPointCaption}
         type="text"
         ref={initialPoint}
-        placeholder="Punto de inicio (x,y)"
+        placeholder={initialPointCaption}
       />
       <span className="spaceRight"></span>
       <input
         className="textField"
-        title={placeHolder}
+        title={finalPointCaption}
         type="text"
         ref={finalPoint}
-        placeholder={placeHolder}
+        placeholder={finalPointCaption}
       />
       <span className="spaceRight"></span>
       <input
