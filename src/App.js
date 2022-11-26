@@ -34,7 +34,7 @@ function App() {
 
   const [options, setOptions] = useState(
     //Chart options, initial grid size
-    changeOptions(10, 10)
+    changeOptions(26, 10)
   );
 
   function changeOptions(sizeX, sizeY){
