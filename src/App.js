@@ -117,10 +117,10 @@ function App() {
 
       switch (selectedAlgorithm.current.value){
         case 'midpoint':
-          points = transforms(replicateOctant(midpointAlgorithm([x0, y0], getRadius())));
+          points = transforms(replicateOctant([x0, y0], midpointAlgorithm(getRadius())));
           break;
         case 'bresenhamsCircle':
-          points = transforms(replicateOctant(bresenhamsCircleAlgorithm([x0, y0], getRadius())));
+          points = transforms(replicateOctant([x0, y0], bresenhamsCircleAlgorithm(getRadius())));
           break;
         case 'basicLineDrawing':
           points = transforms(basicLineDrawingAlgorithm([x0, y0], getFinalPoint()));

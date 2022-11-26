@@ -1,8 +1,8 @@
-function midpointAlgorithm(centre, radius) {
+function midpointAlgorithm(radius) {
   var points = [];
   var pi = 1 - radius;
-  var xi = centre[0];
-  var yi = centre[1] + radius;
+  var xi = 0;
+  var yi = radius;
   points.push([xi, yi]);
   while (xi < yi) {
     xi++;

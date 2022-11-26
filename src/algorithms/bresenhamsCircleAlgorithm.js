@@ -1,13 +1,10 @@
-function bresenhamsCircleAlgorithm(centre, radius) {
-  //Center and radius
+function bresenhamsCircleAlgorithm(radius) {
   var points = [];
   var x = 0;
   var y = radius;
   var d = 3 - 2 * radius;
   while (x <= y) {
-    let xPlot = x + centre[0];
-    let yPlot = y + centre[1];
-    points.push([xPlot, yPlot]);
+    points.push([x, y]);
     x++;
     if (d < 0) {
       d += 4 * x + 6;
