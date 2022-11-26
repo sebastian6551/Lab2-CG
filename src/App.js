@@ -180,8 +180,8 @@ function App() {
         <option value="basicLineDrawing">Algoritmo de dibujo de líneas básico</option>
         <option value="DDA">Algoritmo de dibujo de líneas DDA</option>
         <option value="bresenhamsLine">Algoritmo de dibujo de líneas de Bresenham</option>
-        <option value="midpoint">Algoritmo de dibujo de círculo de punto medio</option>
-        <option value="bresenhamsCircle">Algoritmo de dibujo de círculo de Bresenham</option>
+        <option value="midpoint">Algoritmo de dibujo de círculos de punto medio</option>
+        <option value="bresenhamsCircle">Algoritmo de dibujo de círculos de Bresenham</option>
       </select>
       <span className="spaceRight"></span>
       <input
